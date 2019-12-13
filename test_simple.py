@@ -29,6 +29,8 @@ def parse_args():
 
     parser.add_argument('--image_path', type=str,
                         help='path to a test image or folder of images', required=True)
+    parser.add_argument('--output_path', type=str,
+                        help='path to output image(s)', required=True)
     parser.add_argument('--model_name', type=str,
                         help='name of a pretrained model to use',
                         choices=[
@@ -46,6 +48,7 @@ def parse_args():
     parser.add_argument("--no_cuda",
                         help='if set, disables CUDA',
                         action='store_true')
+    parser.add_argument('--task_type', type=str, default='')
 
     return parser.parse_args()
 
@@ -94,13 +97,13 @@ def test_simple(args):
     if os.path.isfile(args.image_path):
         # Only testing on a single image
         paths = [args.image_path]
-        output_directory = os.path.dirname(args.image_path)
+        
     elif os.path.isdir(args.image_path):
         # Searching folder for images
         paths = glob.glob(os.path.join(args.image_path, '*.{}'.format(args.ext)))
-        output_directory = args.image_path
     else:
         raise Exception("Can not find args.image_path: {}".format(args.image_path))
+    output_directory = args.output_path
 
     print("-> Predicting on {:d} test images".format(len(paths)))
 
@@ -114,6 +117,8 @@ def test_simple(args):
 
             # Load image and preprocess
             input_image = pil.open(image_path).convert('RGB')
+            if args.task_type == 'pku autonomous driving':
+                input_image = input_image[:, input_image.size[1]//2:]
             original_width, original_height = input_image.size
             input_image = input_image.resize((feed_width, feed_height), pil.LANCZOS)
             input_image = transforms.ToTensor()(input_image).unsqueeze(0)
