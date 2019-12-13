@@ -98,7 +98,7 @@ def test_simple(args):
         # Only testing on a single image
         paths = [args.image_path]
         
-    elif os.path.isdir(args.image_path):d
+    elif os.path.isdir(args.image_path):
         # Searching folder for images
         paths = glob.glob(os.path.join(args.image_path, '*.{}'.format(args.ext)))
     else:
