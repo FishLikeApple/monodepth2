@@ -131,10 +131,10 @@ def test_simple(args):
             disp = outputs[("disp", 0)]
             disp_resized = torch.nn.functional.interpolate(
                 disp, (original_height, original_width), mode="bilinear", align_corners=False)
-
+            output_name = os.path.splitext(os.path.basename(image_path))[0]
+            
             """
             # Saving numpy file
-            output_name = os.path.splitext(os.path.basename(image_path))[0]
             name_dest_npy = os.path.join(output_directory, "{}_disp.npy".format(output_name))
             scaled_disp, _ = disp_to_depth(disp, 0.1, 100)
             np.save(name_dest_npy, scaled_disp.cpu().numpy())
