@@ -118,7 +118,7 @@ def test_simple(args):
             # Load image and preprocess
             input_image = pil.open(image_path).convert('RGB')
             if args.task_type == 'pku autonomous driving':
-                input_image = input_image[:, input_image.size[1]//2:]
+                input_image = input_image.crop([0, input_image.size[1]//2, input_image.size[0], input_image.size[1]])
             original_width, original_height = input_image.size
             input_image = input_image.resize((feed_width, feed_height), pil.LANCZOS)
             input_image = transforms.ToTensor()(input_image).unsqueeze(0)
